@@ -1,0 +1,14 @@
+# Virtual Environment
+venv/
+
+# Compiled Python files
+*.pyc
+__pycache__/
+
+# Colab files
+gdrive/
+
+# Data files
+data/
+credentials.json
+*.csv
