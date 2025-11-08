@@ -12,3 +12,6 @@ gdrive/
 data/
 credentials.json
 *.csv
+
+# Kaggle Credentials
+.kaggle/
