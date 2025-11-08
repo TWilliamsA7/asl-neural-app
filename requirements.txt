@@ -1,21 +1,17 @@
-# --- Critical ML Packages ---
-# Must use 2.19.0 to satisfy pre-installed tf-keras and tensorflow-text
+# Core ML/CV Libraries (adjusting versions to ensure stability)
 tensorflow==2.19.0 
 keras==3.11.3 
-
-# Must use version < 12.0 to satisfy gradio
-pillow < 12.0 
-
-# Must use version compatible with Colab's default grpcio and google-ai-generativelanguage
-protobuf < 6.0.0dev
-
-numpy < 2.1 
-opencv-python
 mediapipe
+opencv-python
+numpy<2.1  # To satisfy numba/other potential conflicts
+pillow<12.0 # To satisfy gradio/other potential conflicts
+protobuf<6.0.0dev # To satisfy grpcio-status/google-ai-generativelanguage
+
+# Data Science and Notebook Utilities
 scikit-learn
 matplotlib
-fastapi
-uvicorn
 seaborn
-requests < 2.32.5
-rich < 14   
+pandas
+
+# External Tool for Data Acquisition
+kaggle
