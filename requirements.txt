@@ -5,7 +5,7 @@
 numpy==2.0.0 
 
 # Computer Vision and Feature Extraction
-mediapipe
+mediapipe=0.10.11
 opencv-python
 
 # --- Base Dependencies (Tighter constraints for stability) ---
