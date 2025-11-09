@@ -15,3 +15,16 @@ credentials.json
 
 # Kaggle Credentials
 .kaggle/
+
+# --- Large/Processed Data and Artifacts ---
+processed_data/
+*.npy
+*.csv
+*.zip
+*.json.zip
+
+# --- Model Artifacts ---
+*.h5
+*.keras
+*.pb
+saved_model/
