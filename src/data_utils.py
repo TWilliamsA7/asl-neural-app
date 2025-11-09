@@ -4,19 +4,36 @@ import mediapipe as mp
 import os
 import tensorflow as tf
 
-# Initialize MediaPipe Hands
+# --- Global Definitions (No expensive initialization here) ---
 mp_hands = mp.solutions.hands
-# Use static_image_mode=True since we are processing stored images (not a live video stream)
-hands = mp_hands.Hands(static_image_mode=True, max_num_hands=1, min_detection_confidence=0.5)
+hands_detector = None # Will hold the initialized mp_hands.Hands() object
 
-# --- Configuration ---
+# --- Configuration (These are safe) ---
 IMG_WIDTH, IMG_HEIGHT = 224, 224
+
+
+def initialize_hands_detector():
+    """Initializes the MediaPipe Hands object only once."""
+    global hands_detector
+    if hands_detector is None:
+        print("Initializing MediaPipe Hands Detector...")
+        # This is the line that caused the error, now safely inside a function
+        hands_detector = mp_hands.Hands(
+            static_image_mode=True, 
+            max_num_hands=1, 
+            min_detection_confidence=0.5
+        )
+    return hands_detector
+
 
 def extract_keypoints(image_path):
     """
     Loads an image, extracts normalized 2D hand landmark keypoints (42 values),
     and returns the resized image for CNN input.
     """
+
+    detector = initialize_hands_detector()
+
     image = cv2.imread(image_path)
     if image is None:
         print(f"Warning: Could not read image at {image_path}")
@@ -28,7 +45,7 @@ def extract_keypoints(image_path):
     resized_image = cv2.resize(image, (IMG_WIDTH, IMG_HEIGHT))
     
     # Process the image with MediaPipe
-    results = hands.process(image_rgb)
+    results = detector.process(image_rgb)
     
     keypoints = []
     
