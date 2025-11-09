@@ -1,17 +1,35 @@
-# Core ML/CV Libraries (adjusting versions to ensure stability)
-tensorflow==2.19.0 
+# --- Core ML/CV Libraries ---
+
+# Lock TensorFlow to 2.19.0 to satisfy Colab's tf-keras dependency
+tensorflow==2.19.0
+# Keras 3 is decoupled; 3.11.3 is a stable version.
 keras==3.11.3 
+
+# Computer Vision and Feature Extraction
 mediapipe
 opencv-python
-numpy<2.1  # To satisfy numba/other potential conflicts
-pillow<12.0 # To satisfy gradio/other potential conflicts
-protobuf<6.0.0dev # To satisfy grpcio-status/google-ai-generativelanguage
 
-# Data Science and Notebook Utilities
+# --- Base Dependencies (Critical for Stability) ---
+
+# TensorFlow 2.19.0 requires NumPy 1.x (not 2.x). 1.25.2 is a stable version.
+numpy==1.25.2 
+
+# protobuf needs to be constrained to avoid conflicts with Google's APIs.
+protobuf<4.26,>=3.20.3 
+
+# Pillow version < 12.0 for compatibility with pre-installed libraries like Gradio/Colab-default packages.
+Pillow<12.0 
+
+# --- Data Science and Notebook Utilities ---
 scikit-learn
 matplotlib
 seaborn
 pandas
 
-# External Tool for Data Acquisition
+# --- External Tools ---
 kaggle
+google-cloud-storage # Necessary for programmatic GCS bucket access (upload/download)
+
+# --- Colab Integration Fixes (Prevent common warnings/errors) ---
+# Ensure requests version is compatible with google-colab (adjust if needed, 2.31.0 is often stable)
+requests==2.31.0
