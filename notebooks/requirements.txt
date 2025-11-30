@@ -1,0 +1,30 @@
+# --- Core ML/CV Libraries ---
+# Rely on Colab's optimized defaults for TF and Keras.
+
+# Updated to a NumPy 2.x version to satisfy thinc/pytensor/opencv-python-headless
+numpy==2.0.0 
+
+# Computer Vision and Feature Extraction
+mediapipe
+opencv-python
+
+# --- Base Dependencies (Tighter constraints for stability) ---
+# Constraint for protobuf remains stable
+protobuf<4.26,>=3.20.3 
+
+# Pillow constraint
+Pillow<12.0 
+
+# --- Data Science and Notebook Utilities ---
+scikit-learn
+matplotlib
+seaborn
+pandas
+
+# --- External Tools ---
+kaggle
+google-cloud-storage
+
+# --- Colab Integration Fixes ---
+# Updated to 2.32.4 to satisfy google-colab/google-adk/datasets
+requests==2.32.4
