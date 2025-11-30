@@ -8,7 +8,7 @@ MODEL_PATH = 'models/best_fusion_model.keras'
 IMAGE_SIZE = (224, 224)
 KEYPOINT_FEATURES = 42
 NUM_CLASSES = 29
-CLASS_LABELS = ['A', 'B', 'C', 'B', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'SPACE', 'DELETE', 'NOTHING']
+CLASS_LABELS = ['A', 'B', 'C', 'B', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'del', 'nothing', 'space']
 
 # Global variables for normalization parameters
 KEYPOINT_MU = None
@@ -57,8 +57,10 @@ def preprocess_cnn_input(frame):
         Resizes and normalizes the input frame for the CNN branch (image_input).
         Assumes frame is already loaded as a NumPy array (BGR format from cv2).
     """
+    image_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+
     # 1. Resize to the target input size (224x224)
-    img_resized = cv2.resize(frame, IMAGE_SIZE)
+    img_resized = cv2.resize(image_rgb, IMAGE_SIZE)
 
     # 2. Normalize pixel values to [0, 1] (Assuming your original preprocessing did this)
     img_normalized = img_resized
