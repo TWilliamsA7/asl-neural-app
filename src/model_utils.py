@@ -8,7 +8,11 @@ MODEL_PATH = 'models/best_fusion_model.keras'
 IMAGE_SIZE = (224, 224)
 KEYPOINT_FEATURES = 42
 NUM_CLASSES = 29
-CLASS_LABELS = [str(i) for i in range(NUM_CLASSES)]
+CLASS_LABELS = ['A', 'B', 'C', 'B', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'SPACE', 'DELETE', 'NOTHING']
+
+# Global variables for normalization parameters
+KEYPOINT_MU = None
+KEYPOINT_SIGMA = None
 
 mp_hands = mp.solutions.hands
 
@@ -21,6 +25,33 @@ hands = mp_hands.Hands(
 mp_drawing = mp.solutions.drawing_utils
 
 
+def load_normalization_parameters(path):
+    """
+    Loads the mean (mu) and sigma for Z-score normalization of keypoints 
+    from the NPZ file created during training.
+    """
+    global KEYPOINT_MU, KEYPOINT_SIGMA
+    if not os.path.exists(path):
+        raise FileNotFoundError(f"Normalization parameters not found at: {path}. Have you run the export script and copied the file?")
+    
+    # === CRITICAL LOADING LOGIC HERE ===
+    
+    # 1. Load the NPZ file. It returns a dictionary-like object.
+    data = np.load(path)
+    
+    # 2. Access the arrays using the keys they were saved with ('mu', 'sigma')
+    KEYPOINT_MU = data['mu']
+    KEYPOINT_SIGMA = data['sigma']
+    
+    # 3. Check for correctness
+    if KEYPOINT_MU.shape != (KEYPOINT_FEATURES,) or KEYPOINT_SIGMA.shape != (KEYPOINT_FEATURES,):
+         raise ValueError(f"Normalization parameters shape mismatch. Expected (42,), got mu:{KEYPOINT_MU.shape}, sigma:{KEYPOINT_SIGMA.shape}")
+
+    print("Keypoint normalization parameters loaded successfully.")
+
+
+
+
 def preprocess_cnn_input(frame):
     """
         Resizes and normalizes the input frame for the CNN branch (image_input).
@@ -30,7 +61,7 @@ def preprocess_cnn_input(frame):
     img_resized = cv2.resize(frame, IMAGE_SIZE)
 
     # 2. Normalize pixel values to [0, 1] (Assuming your original preprocessing did this)
-    img_normalized = img_resized.astype('float32') / 255.0
+    img_normalized = img_resized
     
     # 3. Add batch dimension: (224, 224, 3) -> (1, 224, 224, 3)
     img_final = np.expand_dims(img_normalized, axis=0)
@@ -75,8 +106,9 @@ def extract_keypoints_from_frame(frame, draw_landmarks=True):
 
         # 3. Format keypoints for the model
         keypoint_data = np.array(keypoints).astype('float32')
+        keypoint_data_normalized = (keypoint_data - KEYPOINT_MU) / KEYPOINT_SIGMA
         # Add batch dimension: (42,) -> (1, 42)
-        keypoint_final = np.expand_dims(keypoint_data, axis=0)
+        keypoint_final = np.expand_dims(keypoint_data_normalized, axis=0)
         
         return keypoint_final, frame
     
