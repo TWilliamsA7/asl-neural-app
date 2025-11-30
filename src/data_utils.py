@@ -62,3 +62,25 @@ def extract_keypoints(image_path):
     
     # Return None if no valid hand detection occurred
     return None, None
+
+
+def create_keypoint_param(keypoint_path):
+    if not os.path.exists(keypoint_path):
+        raise FileNotFoundError(f"ERROR: keypoints file not found at  {keypoint_path}")
+    
+    try:
+        X_keypoints = np.load(keypoint_path)
+        mu = np.mean(X_keypoints, axis=0)
+        sigma = np.std(X_keypoints, axis=0)
+         
+        print(f"Calculated Mu shape: {mu.shape}")
+        print(f"Calculated Sigma shape: {sigma.shape}")
+
+        # 3. Handle zero standard deviation: Set very small values to 1.0 to prevent division by zero
+        sigma[sigma < 1e-6] = 1.0
+        np.savez_compressed('data/keypoint_norm_params.npz', mu=mu.astype(np.float32), sigma=sigma.astype(np.float32))
+        print("\n --- Export Success --- ")
+        print("File 'keypoint_norm_params.npz' created.")
+    except Exception as e:
+        print(f"Failed to create npz file: {e}")
+        return
