@@ -22,3 +22,9 @@ def init_app():
     global MODEL
     load_normalization_parameters('../data/keypoint_norm_params.npz')
     MODEL = load_model_once('../models/best_fusion_model.keras')
+
+
+
+if __name__ == "__main__":
+    init_app()
+    socketio.run(app, debug=True, port=5000)
