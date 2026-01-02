@@ -7,16 +7,32 @@ const labelDiv = document.getElementById("prediction-label");
 const confBar = document.getElementById("confidence-bar");
 const confText = document.getElementById("confidence-text");
 
+// Capture canvas for frame extraction
+const captureCanvas = document.createElement("canvas");
+captureCanvas.width = 640;
+captureCanvas.height = 480;
+const captureContext = captureCanvas.getContext("2d");
+
 // Access Webcam
-navigator.mediaDevices.getUserMedia({ video: true }).then((stream) => {
-  video.srcObject = stream;
-});
+navigator.mediaDevices
+  .getUserMedia({
+    video: { width: 640, height: 480 },
+  })
+  .then((stream) => {
+    video.srcObject = stream;
+  });
 
 // Loop: Capture frame and send via WebSocket
 function sendFrame() {
-  context.drawImage(video, 0, 0, 640, 480);
-  const data = canvas.toDataURL("image/jpeg", 0.5);
-  socket.emit("image_frame", data);
+  if (video.readyState === video.HAVE_ENOUGH_DATA) {
+    // Draw current video frame to hidden capture canvas
+    captureContext.drawImage(video, 0, 0, 640, 480);
+    const data = captureCanvas.toDataURL("image/jpeg", 0.6);
+    socket.emit("image_frame", data);
+  } else {
+    // Wait for video to be ready
+    requestAnimationFrame(sendFrame);
+  }
 }
 
 socket.on("prediction_response", (data) => {
@@ -30,10 +46,15 @@ socket.on("prediction_response", (data) => {
 
   // Draw annotated image onto the canvas
   const img = new Image();
-  img.onload = () => context.drawImage(img, 0, 0);
+  img.onload = () => {
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(img, 0, 0, canvas.width, canvas.height);
+    // Trigger next frame after current one is processed and displayed
+    requestAnimationFrame(sendFrame);
+  };
   img.src = data.annotated_image;
-
-  setTimeout(sendFrame, 50);
 });
 
-setTimeout(sendFrame, 1000);
+video.onloadeddata = () => {
+  sendFrame();
+};
