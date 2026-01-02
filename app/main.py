@@ -7,10 +7,10 @@ from flask import Flask, render_template
 from flask_socketio import SocketIO, emit
 
 # Add src to path to reuse inference logic
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src')))
+sys.path.append('src')
 
 # Import dependencies from src
-from src.model_utils import load_model_once, load_normalization_parameters, extract_keypoints_from_frame, preprocess_cnn_input, run_prediction
+from model_utils import load_model_once, load_normalization_parameters, extract_keypoints_from_frame, preprocess_cnn_input, run_prediction
 
 # Define App and Socket
 app = Flask(__name__)
@@ -20,8 +20,8 @@ MODEL = None
 
 def init_app():
     global MODEL
-    load_normalization_parameters('../data/keypoint_norm_params.npz')
-    MODEL = load_model_once('../models/best_fusion_model.keras')
+    load_normalization_parameters('data/keypoint_norm_params.npz')
+    MODEL = load_model_once('models/best_fusion_model.keras')
 
 @app.route('/')
 def index():
