@@ -10,27 +10,46 @@
   <body
     class="bg-violet-300 text-black min-h-screen flex flex-col items-center p-8"
   >
-    <h1 class="text-4xl font-bold mb-8 text-stone-700">
-      ASL Real-Time Recognition
-    </h1>
+    <header class="text-center mb-10">
+      <h1
+        class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400"
+      >
+        ASL FUSION AI
+      </h1>
+      <p class="text-slate-400 mt-2">Real-time Sign Language Recognition</p>
+    </header>
 
     <div class="grid grid-cols-1 gap-8 max-w-6xl w-full">
       <!-- Live Feed -->
-      <div class="bg-violet-200 p-4 rounded-xl shadow-2xl">
-        <h2 class="text-xl mb-4 font-semibold text-violet-800">Webcam Input</h2>
-        <video
-          id="video"
-          width="640"
-          height="480"
-          autoplay
-          class="hidden"
-        ></video>
-        <canvas
-          id="canvas"
-          width="640"
-          height="480"
-          class="rounded-lg w-full bg-black"
-        ></canvas>
+      <div
+        class="lg:col-span-2 bg-violet-300 p-2 rounded-2xl shadow-2xl border border-violet-200"
+      >
+        <div
+          class="relative overflow-hidden rounded-xl bg-black aspect-video flex items-center justify-center"
+        >
+          <!-- Hidden video element used as source -->
+          <video
+            id="video"
+            width="640"
+            height="480"
+            autoplay
+            playsinline
+            class="hidden"
+          ></video>
+          <!-- Display canvas: Shows only the processed frames from server -->
+          <canvas
+            id="canvas"
+            width="640"
+            height="480"
+            class="w-full h-full object-contain"
+          ></canvas>
+
+          <div
+            class="absolute bottom-4 left-4 bg-black/50 backdrop-blur-md px-3 py-1 rounded-full text-xs font-mono text-emerald-400 border border-emerald-500/30"
+          >
+            LIVE STREAM
+          </div>
+        </div>
       </div>
 
       <!-- Results Panel -->
