@@ -6,12 +6,6 @@ A lightweight full-stack application that translates American Sign Language in r
 
 This project utilizes a full structured machine learning pipeline via **Google Colab** to create an ASL recognizing Convolutional Neural Network. This model was then integrated into a lightweight **flask** application for live inference. This repository is a rewrite and restructing of a previous codebase for improved performance, maintainability, and scalability.
 
-The core focus of this repository is:
-
-- **Modular Code:** Implementing modules within the `src/` directory for clear separation of concerns (e.g., data handling, modeling, and evaluation).
-- **Reproducibility:** Using Git and a strict `requirements.txt` file to ensure consistent and reproducible environments across all execution platforms.
-- **Scalable Execution:** Facilitating a seamless transition to cloud resources (like Colab's GPUs/TPUs) for heavy computation and training.
-
 ## Features :star:
 
 - Full Machine Learning Pipeline Notebook
@@ -52,6 +46,8 @@ python app/main.py
 # Runs Simple Live Inference
 python src/main.py
 ```
+
+- Ensure that the dependencies from respective `requirements.txt` are installed
 
 ## Preview
 
